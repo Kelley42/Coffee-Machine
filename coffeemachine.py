@@ -3,6 +3,7 @@ import os
 
 
 def machine():
+    global profit
     print(f"\nMENU\nespresso: ${menu['espresso']['cost']}0     latte: ${menu['latte']['cost']}0     cappuccino: ${menu['cappuccino']['cost']}0")
     while True:
         drink_choice = input("\nWhat would you like? Type '1' for espresso, '2' for latte, or '3' for cappuccino: ")
@@ -19,7 +20,7 @@ def machine():
             enough_ingredients(drink_choice)
             break
         elif drink_choice == 'report':
-            print(f"\nWater: {resources['water']}mL\nMilk: {resources['milk']}mL\nCoffee: {resources['coffee']}g")
+            print(f"\nWater: {resources['water']}mL\nMilk: {resources['milk']}mL\nCoffee: {resources['coffee']}g\nProfit: ${'{:0.2f}'.format(profit)}")
             machine()
             break
         elif drink_choice == 'off':
@@ -57,9 +58,7 @@ def machine():
             break
     money_amount = change_value(num_quarters, num_dimes, num_nickels, num_pennies)
     change = enough_money(money_amount, drink_choice)
-    resources["water"] -= menu[drink_choice]["ingredients"]["water"]
-    resources["milk"] -= menu[drink_choice]["ingredients"]["milk"]
-    resources["coffee"] -= menu[drink_choice]["ingredients"]["coffee"]
+    profit += menu[drink_choice]["cost"]
     change = "{:0.2f}".format(change)
     print(f"\nHere is ${change} in change. Here is your {drink_choice}. Enjoy!")
     machine()
@@ -67,17 +66,14 @@ def machine():
 
 def enough_ingredients(drink_choice):
     """Take drink ordered and see if machine has enough ingredients"""
-    if resources["water"] < menu[drink_choice]["ingredients"]["water"]:
-        print("\nSorry, there is not enough water.")
-        machine()
-    elif resources["milk"] < menu[drink_choice]["ingredients"]["milk"]:
-        print("\nSorry, there is not enough milk.")
-        machine()
-    elif resources["coffee"] < menu[drink_choice]["ingredients"]["coffee"]:
-        print("\nSorry, there is not enough coffee.")
-        machine()
-    else:
-        return 
+    for ingredient in menu[drink_choice]["ingredients"]:
+        if resources[ingredient] < menu[drink_choice]["ingredients"][ingredient]:
+            print(f"\nSorry, there is not enough {ingredient}.")
+            machine()
+        else:
+            for ingredient in menu[drink_choice]["ingredients"]:
+                resources[ingredient] -= menu[drink_choice]["ingredients"][ingredient]
+            return 
 
 def enough_money(money_amount, drink_choice):
     """Takes coins given and see if it's enough to buy coffee"""
@@ -97,4 +93,5 @@ def change_value(num_quarters, num_dimes, num_nickels, num_pennies):
     sum_change = quarters + dimes + nickels + pennies
     return sum_change
 
+profit = 0
 machine()
