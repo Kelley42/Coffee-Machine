@@ -1,0 +1,3 @@
+# Coffee Machine
+
+This is a program designed to act like a coffee machine. It offers 3 different kinds of coffee drinks to the user. If the user has enough change, and the machine has enough of the correct ingredients, then the user is able to receive the coffee. For maintenance of the machine, a user is also able to type in secret words that normal customers would not. "Report" shows the amount of ingredients remain in the machine, while "off" while shut the coffee machine off (end the program).
